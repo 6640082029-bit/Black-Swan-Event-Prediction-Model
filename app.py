@@ -1,3 +1,6 @@
+# ╔══════════════════════════════════════════════════════════╗
+# ║   Black Swan Event Prediction Model                      ║
+# ╚══════════════════════════════════════════════════════════╝
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -26,16 +29,16 @@ html, body, [data-testid="stAppViewContainer"] {
 /* ── Section header ── */
 .sec-header {
     display: flex; align-items: center; gap: 12px;
-    padding: 14px 22px; border-radius: 12px;
-    margin: 32px 0 20px 0;
-    border-left: 5px solid;
+    padding: 20px 28px; border-radius: 14px;
+    margin: 36px 0 22px 0;
+    border-left: 6px solid;
 }
 .sec-header.blue  { background:#EFF6FF; border-color:#3B82F6; }
 .sec-header.green { background:#F0FDF4; border-color:#10B981; }
 .sec-header.violet{ background:#F5F3FF; border-color:#8B5CF6; }
-.sec-tag   { font-size:11px; font-weight:600; letter-spacing:.1em;
-             text-transform:uppercase; opacity:.6; }
-.sec-title { font-size:1.35rem; font-weight:600; margin:0; }
+.sec-tag   { font-size:12px; font-weight:700; letter-spacing:.12em;
+             text-transform:uppercase; opacity:.65; margin-bottom:4px; }
+.sec-title { font-size:1.85rem; font-weight:700; margin:0; line-height:1.2; }
 
 /* ── Cards ── */
 .card {
@@ -510,81 +513,52 @@ if sandbox_ok:
 
     duck_col, result_col = st.columns([1, 2], gap="large")
 
-   import streamlit.components.v1 as components
+    with duck_col:
+        if p_sim_today < 5:
+            tenor_id   = "15568846810302620355"
+            duck_label = "\U0001f9a2 Happy Duck"
+            text_color = clr_sim
+            shake_css  = ""
+        elif p_sim_today < 15:
+            tenor_id   = "13982082229451252813"
+            duck_label = "\U0001f630 Anxious Duck"
+            text_color = clr_sim
+            shake_css  = ""
+        else:
+            tenor_id   = "25805348"
+            duck_label = "\U0001f6a8 PANIC DUCK!"
+            text_color = "#EF4444"
+            shake_css  = (
+                "@keyframes shake{"
+                "0%{transform:translate(1px,1px) rotate(0deg)}"
+                "10%{transform:translate(-1px,-2px) rotate(-1deg)}"
+                "20%{transform:translate(-3px,0px) rotate(1deg)}"
+                "50%{transform:translate(-1px,2px) rotate(-1deg)}"
+                "100%{transform:translate(1px,-2px) rotate(-1deg)}}"
+                ".duck-wrap{animation:shake 0.5s infinite;display:inline-block;width:100%}"
+            )
 
-with sc1:
-    # 1. กำหนด ID และชื่อเรียกตามระดับความเสี่ยง
-    if p_sim_today < 5:
-        # Happy Duck (Psyduck นอน)
-        tenor_id = "15568846810302620355"
-        label = "Happy Duck"
-        text_color = color_sim
-    elif p_sim_today < 15:
-        # Anxious Duck (Psyduck ส่ายหัว)
-        tenor_id = "13982082229451252813"
-        label = "Anxious Duck"
-        text_color = color_sim
-    else:
-        # Panic Duck (Psyduck ตกใจ - ขั้นสุด)
-        tenor_id = "25805348"
-        label = "PANIC DUCK!" 
-        text_color = "white"
-
-    # 2. สร้างโค้ด Embed (ปรับ CSS ให้รูปพอดีกับช่อง)
-    tenor_embed_code = f"""
-    <style>
-        body {{ 
-            margin: 0; 
-            padding: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background-color: transparent;
-        }}
-        .tenor-gif-embed {{
-            max-width: 100% !important;
-        }}
-    </style>
-    <div class="tenor-gif-embed" 
-         data-postid="{tenor_id}" 
-         data-share-method="host" 
-         data-aspect-ratio="1.0" 
-         data-width="100%">
-    </div>
-    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
-    """
-
-    # 3. เพิ่ม height เป็น 280 หรือ 300 เพื่อป้องกันรูปถูกตัด
-    st.markdown(f"<div class='{shake_sim}'>", unsafe_allow_html=True)
-    components.html(tenor_embed_code, height=280) 
-    
-    # 4. แสดงชื่อเรียก
-    st.markdown(f"<h3 style='text-align:center; color:{text_color}; margin-top: -10px;'>{label}</h3>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-        tenor_html = f"""
-        <style>
-          body{{margin:0;padding:0;display:flex;justify-content:center;
-               align-items:center;background:transparent}}
-          .tenor-gif-embed{{max-width:100% !important}}
-        </style>
-        <div class="{shake_cls}">
-          <div class="tenor-gif-embed"
-               data-postid="{tenor_id}"
-               data-share-method="host"
-               data-aspect-ratio="1.0"
-               data-width="100%">
-          </div>
-        </div>
-        <script type="text/javascript" async
-          src="https://tenor.com/embed.js"></script>
-        """
-        components.html(tenor_html, height=260)
-        st.markdown(
-            f"<div style='text-align:center;font-size:1.05rem;font-weight:600;"
-            f"color:{text_color};margin-top:-8px'>{label}</div>",
-            unsafe_allow_html=True,
+        tenor_html = (
+            "<style>"
+            "*{margin:0;padding:0;box-sizing:border-box}"
+            "body{background:transparent;display:flex;flex-direction:column;"
+            "align-items:center;font-family:Segoe UI,sans-serif}"
+            + shake_css +
+            ".duck-wrap{display:inline-block;width:100%}"
+            ".tenor-gif-embed{max-width:100%!important}"
+            f".duck-label{{text-align:center;font-size:1.15rem;font-weight:700;"
+            f"color:{text_color};margin-top:10px}}"
+            "</style>"
+            '<div class="duck-wrap">'
+            f'<div class="tenor-gif-embed" data-postid="{tenor_id}"'
+            ' data-share-method="host" data-aspect-ratio="1.0" data-width="100%">'
+            "</div>"
+            '<script type="text/javascript" async src="https://tenor.com/embed.js"></script>'
+            f'<div class="duck-label">{duck_label}</div>'
+            "</div>"
         )
+        components.html(tenor_html, height=320)
+
 
     with result_col:
         st.markdown(
